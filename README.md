@@ -16,3 +16,9 @@
   ```
   docker compose up   
   ```  
+
+* use dbt commands [e.g init, run, seed, test ]:
+  ```
+    docker compose run --rm dbt init
+  ```  
+  and then follow command prompts   

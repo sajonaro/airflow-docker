@@ -24,4 +24,10 @@ with DAG(
         bash_command='echo "Hello from task 2"'
     )
     
-    task1.set_downstream(task2)
+    task3=BashOperator(
+        task_id='CalculateHash',
+        bash_command='echo "Hello from task 3"'
+    )
+
+
+    task1>>task2>>task3

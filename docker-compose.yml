@@ -75,6 +75,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
+    - ${AIRFLOW_PROJ_DIR:-.}/dbt:/usr/local/airflow/dbt
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -222,6 +223,52 @@ services:
       - -c
       - airflow
 
+  dbt:
+    container_name: dbt
+    build: 
+      context: ./dbt
+      dockerfile: Dockerfile.dbt
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/dbt/:/usr/src/dbt:rw
+      - ${AIRFLOW_PROJ_DIR:-.}/dbt/profile-settings/:/root/.dbt/:rw
+    depends_on:
+      source-db:
+        condition: service_healthy
+
+  source-db:
+    build: 
+      context: ./dbs/postgres
+      dockerfile: Dockerfile
+    restart: always
+    container_name: source-db
+    hostname: source-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=my-strongest-password
+      - POSTGRES_DB=clients-db
+      - PGDATA=/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    volumes:
+      - source_db_vol:/var/lib/postgresql/data/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=source-db:5432
+      - ADMINER_DESIGN='nette'    
 
 volumes:
   postgres-db-volume:
+    driver: local
+  source_db_vol:
+    driver: local
