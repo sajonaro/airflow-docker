@@ -46,11 +46,9 @@
 ---
 x-airflow-common:
   &airflow-common
-  # In order to add custom dependencies or upgrade provider packages you can use your extended image.
-  # Comment the image line, place your Dockerfile in the directory where you placed the docker-compose.yaml
-  # and uncomment the "build" line below, Then run `docker-compose build` to build the images.
-  image: ${AIRFLOW_IMAGE_NAME:-apache/airflow:2.10.4}
-  # build: .
+  build: 
+    context: .
+    dockerfile: Dockerfile  
   environment:
     &airflow-common-env
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -75,7 +73,7 @@ x-airflow-common:
     - ${AIRFLOW_PROJ_DIR:-.}/logs:/opt/airflow/logs
     - ${AIRFLOW_PROJ_DIR:-.}/config:/opt/airflow/config
     - ${AIRFLOW_PROJ_DIR:-.}/plugins:/opt/airflow/plugins
-    - ${AIRFLOW_PROJ_DIR:-.}/dbt:/usr/local/airflow/dbt
+    - ${AIRFLOW_PROJ_DIR:-.}/dbt/projects:/usr/local/airflow/dbt
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
     &airflow-common-depends-on
@@ -129,7 +127,6 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
-
 
   airflow-triggerer:
     <<: *airflow-common
@@ -231,31 +228,25 @@ services:
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}/dbt/:/usr/src/dbt:rw
       - ${AIRFLOW_PROJ_DIR:-.}/dbt/profile-settings/:/root/.dbt/:rw
-    depends_on:
-      source-db:
-        condition: service_healthy
 
-  source-db:
+
+  client-db:
     build: 
       context: ./dbs/postgres
       dockerfile: Dockerfile
     restart: always
-    container_name: source-db
-    hostname: source-db
+    container_name: client-db
+    hostname: client-db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=my-strongest-password
-      - POSTGRES_DB=clients-db
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow12345!
+      - POSTGRES_DB=client-db
       - PGDATA=/var/lib/postgresql/data/
     ports:
-      - 5432:5432
+      - '5433:5433'
+    command: -p 5433  
     volumes:
-      - source_db_vol:/var/lib/postgresql/data/
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - client_db_vol:/var/lib/postgresql/data/
 
   adminer:
     image: adminer
@@ -264,11 +255,10 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - ADMINER_DEFAULT_SERVER=source-db:5432
-      - ADMINER_DESIGN='nette'    
+      - ADMINER_DEFAULT_SERVER=client-db:5433
 
 volumes:
   postgres-db-volume:
     driver: local
-  source_db_vol:
+  client_db_vol:
     driver: local

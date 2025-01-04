@@ -1,0 +1,12 @@
+airflow_db:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: postgres
+      user: airflow
+      password: airflow12345!
+      port: 5433
+      dbname: client-db
+      schema: dbt
+      threads: 4

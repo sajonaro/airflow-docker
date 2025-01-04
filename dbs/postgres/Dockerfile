@@ -1,7 +1,7 @@
 FROM postgres:14.5
 
 #seed DB
-COPY init.sql /docker-entrypoint-initdb.d/books_shop_schema.sql
+COPY books_shop_schema.sql /docker-entrypoint-initdb.d/books_shop_schema.sql
 
 # Add custom config files
 COPY custom_config.conf  /tmp/custom_config.conf

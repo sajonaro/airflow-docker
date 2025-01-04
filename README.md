@@ -17,26 +17,29 @@ This is a small PoC demonstrating use of airflow + Dbt+ cosmos in docker
   - web ui
 
 ## 101
-* ```
-  mkdir ./dags ./logs ./plugins 
+* to start up the stack
+  ```bash
+  $ ./start.sh
+  ```
+  ... which does following  
+    ```bash
+    $ docker compose up airflow-init  
+    $ sleep 5
+    $ docker compose up   
+    ```
+
+* to use dbt cli use dbt commands [e.g init, run, seed, test ]:
+  ```bash
+  #use dbt commands [e.g init, run, seed, test ]
+  # and then follow command prompts 
+  $ docker compose run --rm dbt init
+  ```  
+   
+### some useful commands
+* if on linux 
+  ```bash
+  #create directories
+  $ mkdir ./dags ./logs ./plugins ./dbt
+  #configure UID and GID
+  $ echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
   ``` 
-  if on linux 
-  ```
-  echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
-  ```
-
-* init via command:
-  ```
-  docker compose up airflow-init  
-  ```
-
-* run via command:
-  ```
-  docker compose up   
-  ```  
-
-* use dbt commands [e.g init, run, seed, test ]:
-  ```
-    docker compose run --rm dbt init
-  ```  
-  and then follow command prompts   
