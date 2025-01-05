@@ -45,3 +45,15 @@ northwind_ex1:
       type: postgres
       user: airflow
   target: dev
+northwind_ex2:
+  outputs:
+    dev:
+      dbname: ex2
+      host: northwind
+      pass: airflow
+      port: 5454
+      schema: out
+      threads: 1
+      type: postgres
+      user: airflow
+  target: dev

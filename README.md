@@ -54,6 +54,19 @@ This is a small PoC demonstrating use of airflow + Dbt+ cosmos in docker
 
 
 ### some useful commands
+* use postgres cli
+  ```bash
+    # attach to db container as root
+    # then connect to database e.g. 
+    #     user = airflow,  db = ex1, port = 5454
+    $ psql -U airflow -h localhost ex1 -p 5454
+
+    # 'out' is the schema name
+    SELECT * FROM pg_catalog.pg_tables WHERE schemaname='out';
+
+    # assuming there is table `customers` in schema `out`
+    SELECT * from out.customers;
+  ```
 
 * if on linux 
 
