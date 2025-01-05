@@ -22,7 +22,7 @@ This is a small PoC demonstrating use of airflow + Dbt+ cosmos in docker
   - ..and more
 
 ## 101
-* to start up the stack
+* start up the stack
   ```bash
   $ ./start.sh
   ```
@@ -32,6 +32,11 @@ This is a small PoC demonstrating use of airflow + Dbt+ cosmos in docker
     $ sleep 5
     $ docker compose up   
     ```
+* configure 'connections' (so that Dbt can use them) via Airflow UI
+   - open http://localhost:8080   (u,p -> airflow,airflow   - check docker-compose.yml ) 
+   - navigate to Admin/Connections/ add new 
+   - e.g we need to create `ex1_db` and `ex2_db` (see ./dags/include.profiles.py  to see why)
+   - connection details are postgresql://airflow:airflow@northwind:5454/ex1 ( check docker-compose.yml)
 
 * to use dbt cli (via docker compose):
   ```bash

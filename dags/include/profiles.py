@@ -4,11 +4,20 @@ from cosmos import ProfileConfig
 from cosmos.profiles import PostgresUserPasswordProfileMapping
 
 
-airflow_db = ProfileConfig(
-    profile_name="airflow_db",
+ex1_db = ProfileConfig(
+    profile_name="ex1",
     target_name="dev",
     profile_mapping=PostgresUserPasswordProfileMapping(
-        conn_id="airflow_metadata_db",
-        profile_args={"schema": "dbt"},
+        conn_id="ex1",
+        profile_args={"schema": "out"},
+    ),
+)
+
+ex2_db = ProfileConfig(
+    profile_name="ex2",
+    target_name="dev",
+    profile_mapping=PostgresUserPasswordProfileMapping(
+        conn_id="ex2",
+        profile_args={"schema": "out"},
     ),
 )

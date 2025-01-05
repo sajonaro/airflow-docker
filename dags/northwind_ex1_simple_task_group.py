@@ -6,7 +6,7 @@ from airflow.operators.empty import EmptyOperator
 
 from cosmos import DbtTaskGroup, ProjectConfig
 
-from include.profiles import airflow_db
+from include.profiles import ex1_db
 from include.constants import northwind_ex1_path, venv_execution_config
 from airflow.operators.bash import BashOperator
 
@@ -28,7 +28,7 @@ def simple_task_group_ex1() -> None:
     northwind_ex1 = DbtTaskGroup(
         group_id="northwind_ex1_project",
         project_config=ProjectConfig(northwind_ex1_path),
-        profile_config=airflow_db,
+        profile_config=ex1_db,
         execution_config=venv_execution_config,
     )
 

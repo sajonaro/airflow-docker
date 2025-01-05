@@ -9,7 +9,7 @@ from pathlib import Path
 from cosmos import DbtDag, ProjectConfig, ProfileConfig
 from cosmos.profiles import PostgresUserPasswordProfileMapping
 
-from include.profiles import airflow_db
+from include.profiles import ex2_db
 from include.constants import northwind_ex2_path, venv_execution_config
 
 
@@ -20,7 +20,7 @@ DBT_ROOT_PATH = Path(os.getenv("DBT_ROOT_PATH", DEFAULT_DBT_ROOT_PATH))
 northwind_ex2_basic_cosmos_dag = DbtDag(
     # dbt/cosmos-specific parameters
     project_config=ProjectConfig(northwind_ex2_path),
-    profile_config=airflow_db,
+    profile_config=ex2_db,
     execution_config=venv_execution_config,
     operator_args={
         "install_deps": True,  # install any necessary dependencies before running any dbt command
