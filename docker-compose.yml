@@ -220,7 +220,7 @@ services:
       - -c
       - airflow
 
-  dbt:
+  dbt-cli:
     container_name: dbt
     build: 
       context: ./dbt
@@ -229,6 +229,20 @@ services:
       - ${AIRFLOW_PROJ_DIR:-.}/dbt/:/usr/src/dbt:rw
       - ${AIRFLOW_PROJ_DIR:-.}/dbt/profile-settings/:/root/.dbt/:rw
 
+
+  northwind:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: ex1
+    container_name: northwind
+    hostname: northwind
+    ports:
+      - '5454:5454'
+    command: -p 5454  
+    volumes:
+      - northwind_db_vol:/var/lib/postgresql/data/
 
   client-db:
     build: 
@@ -262,3 +276,5 @@ volumes:
     driver: local
   client_db_vol:
     driver: local
+  northwind_db_vol:
+    driver: local  

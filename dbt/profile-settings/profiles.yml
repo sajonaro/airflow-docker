@@ -1,24 +1,47 @@
 books_shop_example:
   outputs:
-
     dev:
+      dbname:
+      - dbname
+      host:
+      - host
+      pass:
+      - dev_password
+      port:
+      - port
+      schema:
+      - dev_schema
+      threads:
+      - 1 or more
       type: postgres
-      threads: [1 or more]
-      host: [host]
-      port: [port]
-      user: [dev_username]
-      pass: [dev_password]
-      dbname: [dbname]
-      schema: [dev_schema]
-
+      user:
+      - dev_username
     prod:
+      dbname:
+      - dbname
+      host:
+      - host
+      pass:
+      - prod_password
+      port:
+      - port
+      schema:
+      - prod_schema
+      threads:
+      - 1 or more
       type: postgres
-      threads: [1 or more]
-      host: [host]
-      port: [port]
-      user: [prod_username]
-      pass: [prod_password]
-      dbname: [dbname]
-      schema: [prod_schema]
-
+      user:
+      - prod_username
+  target: dev
+northwind_ex1:
+  outputs:
+    dev:
+      dbname: ex1
+      host: northwind
+      pass: airflow
+      port: 5454
+      schema: out
+      threads: 1
+      type: postgres
+      user: airflow
   target: dev

@@ -3,18 +3,23 @@
 This is a small PoC demonstrating use of airflow + Dbt+ cosmos in docker 
 
 [Dbt](https://www.getdbt.com/) provides:
+  - well structured transformation pipeline
+      * model first approach: i.e. each transformation step is defined as 'model'
   - testing
   - version control
   - modularization & centralization of (analytics) code
-  - model first approach 
+
   
 [Cosmos](https://www.astronomer.io/cosmos/) provides:
+  - automatic conversion of Dbt projects into DAGs
   - dependency visualization
-  - observability
+  - ability to run any number of Dbt jobs (virtually for free as there is dependency on Dbt core only)
 
 [Airflow](https://airflow.apache.org/) provides:
-  - orchestrating platform to run Dbt steps as [DAGs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#dags)
+  - extensible automation/orchestrating platform to run Dbt steps as [DAGs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#dags)
   - web ui
+  - cli 
+  - ..and more
 
 ## 101
 * to start up the stack
@@ -28,18 +33,33 @@ This is a small PoC demonstrating use of airflow + Dbt+ cosmos in docker
     $ docker compose up   
     ```
 
-* to use dbt cli use dbt commands [e.g init, run, seed, test ]:
+* to use dbt cli (via docker compose):
   ```bash
-  #use dbt commands [e.g init, run, seed, test ]
+  # use dbt commands [e.g init, run, seed, test ]
   # and then follow command prompts 
-  $ docker compose run --rm dbt init
+  $ docker compose run --rm dbt-cli dbt init
   ```  
-   
-### some useful commands
-* if on linux 
+  .. or alternatively (via virtual environment)
   ```bash
-  #create directories
-  $ mkdir ./dags ./logs ./plugins ./dbt
-  #configure UID and GID
-  $ echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
+  # 1 - create virtual environment = dbt  
+  # 2 - activate it 
+  # 3 - install dbt libs
+
+  $ python3 -m venv dbt \
+    && source dbt/bin/activate \
+    && pip install dbt-core dbt-postgres \
+    && deactivate
+  ```
+   
+
+
+### some useful commands
+
+* if on linux 
+
+  ```bash
+    #create directories
+    $ mkdir ./dags ./logs ./plugins ./dbt
+    #configure UID and GID
+    $ echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
   ``` 
