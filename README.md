@@ -2,6 +2,11 @@
 
 This is a small PoC demonstrating use of airflow + Dbt+ cosmos in docker 
 
+
+![diagram](./high-level-diagram.png)
+
+
+
 [Dbt](https://www.getdbt.com/) provides:
   - well structured transformation pipeline
       * model first approach: i.e. each transformation step is defined as 'model'
