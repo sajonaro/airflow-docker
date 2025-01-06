@@ -21,3 +21,12 @@ ex2_db = ProfileConfig(
         profile_args={"schema": "out"},
     ),
 )
+
+airflow_db = ProfileConfig(
+    profile_name="bookshop",
+    target_name="dev",
+    profile_mapping=PostgresUserPasswordProfileMapping(
+        conn_id="bookshop_con",
+        profile_args={"schema": "out"},
+    ),
+)
