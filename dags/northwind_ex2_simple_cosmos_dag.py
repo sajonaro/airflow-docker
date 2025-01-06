@@ -1,21 +1,15 @@
 """
 An example DAG that uses Cosmos to render a dbt project.
 """
-
 import os
 from datetime import datetime
 from pathlib import Path
-
 from cosmos import DbtDag, ProjectConfig, ProfileConfig
 from cosmos.profiles import PostgresUserPasswordProfileMapping
-
 from include.profiles import ex2_db
 from include.constants import northwind_ex2_path, venv_execution_config
-
-
 DEFAULT_DBT_ROOT_PATH = Path(__file__).parent.parent / "dbt/projects"
 DBT_ROOT_PATH = Path(os.getenv("DBT_ROOT_PATH", DEFAULT_DBT_ROOT_PATH))
-
 # [START local_example]
 northwind_ex2_basic_cosmos_dag = DbtDag(
     # dbt/cosmos-specific parameters
